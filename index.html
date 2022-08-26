@@ -5,7 +5,27 @@
         <meta charset="UTF-8">
         <title>ANTUANF1</title>
         <meta name="Formula uno" content="Formula uno simulación">
-        <link rel="stylesheet" type="text/css" href="style.css" />        
+        <link rel="stylesheet" type="text/css" href="style.css" />
+        <script src="js/json.js"></script>
+        <script>
+            var gps
+
+            function readGps(text){
+                 gps = JSON.parse(text); //parse JSON
+                 console.log(gps);
+                 for (let index in gps) {
+                    var gp = gps[index]
+                    readTextFile("2022/data/gpinfo_"+gp+".json", readGp)
+                 }
+            }
+            function readGp(text){
+                 var data = JSON.parse(text); //parse JSON
+                 console.log(data);
+            }
+            window.onload = function(){
+                readTextFile("2022/data/gps.json", readGps)
+            }
+        </script>    
     </head>
 
     <body background="background/xxxx.jpg" class="imagen_background">
@@ -17,7 +37,7 @@
         </div>
         <p class="titulo3">ANTUAN F1</p>
         <p class="nombre_seccion">
-            <a href="xxxx.html">Gran Premio de 1</a>
+            <a href="2022/01.html">Gran Premio de 1</a>
         </p>
 <!--
         <div class="caja_seccion">
@@ -28,7 +48,7 @@
  -->       
  
         <p class="nombre_seccion">
-            <a href="xxxx.html">Gran Premio de 2</a>
+            <a href="2022/02.html">Gran Premio de 2</a>
         </p>
 
 
