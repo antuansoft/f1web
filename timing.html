@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+ 
+    <head lang="es">
+        <meta charset="UTF-8">
+        <title>Timing</title>
+        <meta name="Formula uno" content="Formula uno simulación">
+        <link rel="stylesheet" type="text/css" href="style.css" />
+        <script src="js/json.js"></script>
+        <script>
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            var gp
+            var laps
+            var lap
+
+            function readGp(text){
+                 var data = JSON.parse(text); //parse JSON
+                 console.log(data);
+                 document.getElementById("gp").innerHTML += data.gp
+            }
+            window.onload = function(){
+                gp=urlParams.get('gp')
+                readTextFile("2022/data/gpinfo_"+gp+".json", readGp)
+            }
+        </script>    
+    </head>
+
+    <body background="background/xxxx.jpg" class="imagen_background">
+        <div w3-include-html="header.html"></div>
+        <div class="migas">
+            <ul>
+                <li><a href="index.html">Portada</a></li>
+            </ul>
+        </div>
+        <p class="titulo3">ANTUAN F1 Lab by lap timing</p>
+
+        <p class="titulo2" id="gp"></p>
+        <div>
+            <table id="laps" border="1">
+
+            </table>
+        </div>
+        
+        <div w3-include-html="footer.html"></div>        
+    </body>
+
+</html>

@@ -3,24 +3,40 @@
  
     <head lang="es">
         <meta charset="UTF-8">
-        <title>ANTUANF1</title>
+        <title>ANTUANF1 Timing and Results</title>
         <meta name="Formula uno" content="Formula uno simulación">
         <link rel="stylesheet" type="text/css" href="style.css" />
         <script src="js/json.js"></script>
         <script>
             var gps
+            var gp
 
             function readGps(text){
                  gps = JSON.parse(text); //parse JSON
                  console.log(gps);
                  for (let index in gps) {
-                    var gp = gps[index]
+                    gp = gps[index]
                     readTextFile("2022/data/gpinfo_"+gp+".json", readGp)
                  }
             }
             function readGp(text){
                  var data = JSON.parse(text); //parse JSON
                  console.log(data);
+                 document.getElementById("gps").innerHTML += ` 
+                <tr>
+                   <td>
+                    <p class="nombre_seccion">
+                    ` +data.round+ `
+                    </p>
+                   </td>
+                   <td>
+                    <p class="nombre_seccion">
+                        <a href="timing.html?gp=` +gp+ `">` +data.gp+ `</a>
+                    </p>
+                   </td>
+                </tr>
+
+                 `;
             }
             window.onload = function(){
                 readTextFile("2022/data/gps.json", readGps)
@@ -35,23 +51,16 @@
                 <li><a href="index.html">Portada</a></li>
             </ul>
         </div>
-        <p class="titulo3">ANTUAN F1</p>
-        <p class="nombre_seccion">
-            <a href="2022/01.html">Gran Premio de 1</a>
-        </p>
-<!--
-        <div class="caja_seccion">
-            <a href="favorites.html">
-                <img class="imagen_seccion" src="images/xxxxx.jpg"/>
-            </a>
+        <p class="titulo3">ANTUAN F1 Timing and results</p>
+        
+        <div>
+            <table id="gps" border="1">
+
+            </table>
+
+
         </div>
- -->       
- 
-        <p class="nombre_seccion">
-            <a href="2022/02.html">Gran Premio de 2</a>
-        </p>
-
-
+        
         <div w3-include-html="footer.html"></div>        
     </body>
 
