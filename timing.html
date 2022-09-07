@@ -11,6 +11,7 @@
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
             var gp
+            var driversDictionary = { };
             var laps
             var lap
 
@@ -19,9 +20,24 @@
                  console.log(data);
                  document.getElementById("gp").innerHTML += data.gp
             }
+            function readDrivers(text){
+                 var data = JSON.parse(text); //parse JSON
+                 console.log(data);
+                 var driversArray = data.drivers;
+
+                 for (var i = 0; i < driversArray.length; ++i) {
+                    var entry = driversArray[i];
+
+                    driversDictionary[entry.number] = entry;
+                    console.log(driversDictionary[entry.number])
+                 }
+                 console.log(driversDictionary[1])
+                 
+            }
             window.onload = function(){
                 gp=urlParams.get('gp')
                 readTextFile("2022/data/gpinfo_"+gp+".json", readGp)
+                readTextFile("2022/data/drivers_"+gp+".json", readDrivers)
             }
         </script>    
     </head>
