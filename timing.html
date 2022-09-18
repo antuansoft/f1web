@@ -12,7 +12,7 @@
             const urlParams = new URLSearchParams(queryString);
             var gp
             var driversDictionary = { };
-            var laps
+            var laps = []
             var lap
 
             function readGp(text){
@@ -22,7 +22,7 @@
             }
             function readDrivers(text){
                  var data = JSON.parse(text); //parse JSON
-                 console.log(data);
+                 //console.log(data);
                  var driversArray = data.drivers;
 
                  for (var i = 0; i < driversArray.length; ++i) {
@@ -31,13 +31,63 @@
                     driversDictionary[entry.number] = entry;
                     console.log(driversDictionary[entry.number])
                  }
-                 console.log(driversDictionary[1])
-                 
+                                  
+            }
+
+            function readLapChart(text){
+                 laps = JSON.parse(text); //parse JSON
+                 console.log(laps);
+                 for (lapindex in laps){
+                    for (carindex in laps[lapindex])
+                        console.log(laps[lapindex][carindex])
+                 }
+
+            }            
+
+            function readLapTime(text){
+                 laps = JSON.parse(text); //parse JSON
+                 console.log(laps);
+                 for (lapindex in laps){
+                    for (timeindex in laps[lapindex])
+                        console.log(laps[lapindex][timeindex])
+                 }
+
+            }   
+
+            function buildData(){
+
             }
             window.onload = function(){
                 gp=urlParams.get('gp')
-                readTextFile("2022/data/gpinfo_"+gp+".json", readGp)
-                readTextFile("2022/data/drivers_"+gp+".json", readDrivers)
+                loadGps = new Promise((resolve, reject) => {
+                    readTextFile("2022/data/gpinfo_"+gp+".json", readGp)
+                    resolve('loadGps fired!');
+                })
+                loadDrivers = new Promise((resolve, reject) => {
+                    readTextFile("2022/data/drivers_"+gp+".json", readDrivers)
+                    resolve('loadDrivers fired!');
+                })
+                loadLapchart = new Promise((resolve, reject) => {
+                    readTextFile("2022/data/lapchart_"+gp+".json", readLapChart)
+                    resolve('loadLapchart fired!');
+                })
+                loadLaptimes = new Promise((resolve, reject) => {
+                    readTextFile("2022/data/laptime_"+gp+".json", readLapTime)
+                    resolve('loadLaptimes fired!');
+                })
+                asyncFunctions=[loadGps,loadDrivers,loadLapchart,loadLaptimes]
+
+                Promise.all(asyncFunctions).then((resp) => {
+                    console.log(resp);
+                    buildData();
+                }).catch((err) => {
+                    console.log('something unexpected happened:'+ err);
+                })
+                
+                //
+                //
+                //
+                //buildData()
             }
         </script>    
     </head>
