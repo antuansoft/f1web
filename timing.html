@@ -12,8 +12,10 @@
             const urlParams = new URLSearchParams(queryString);
             var gp
             var driversDictionary = { };
-            var laps = []
-            var lap
+            var lapChart;
+            var lapTimes;
+            var lap;
+            var timingData = {}
 
             function readGp(text){
                  var data = JSON.parse(text); //parse JSON
@@ -29,32 +31,73 @@
                     var entry = driversArray[i];
 
                     driversDictionary[entry.number] = entry;
-                    console.log(driversDictionary[entry.number])
+                    //console.log(driversDictionary[entry.number])
                  }
                                   
             }
 
             function readLapChart(text){
-                 laps = JSON.parse(text); //parse JSON
-                 console.log(laps);
-                 for (lapindex in laps){
-                    for (carindex in laps[lapindex])
-                        console.log(laps[lapindex][carindex])
+                 lapChart = JSON.parse(text); //parse JSON
+                 console.log(lapChart);
+                 for (lapindex in lapChart){
+                    for (carindex in lapChart[lapindex]){
+                        //console.log(lapCharts[lapindex][carindex])
+                    }
                  }
-
             }            
 
             function readLapTime(text){
-                 laps = JSON.parse(text); //parse JSON
-                 console.log(laps);
-                 for (lapindex in laps){
-                    for (timeindex in laps[lapindex])
-                        console.log(laps[lapindex][timeindex])
+                 lapTimes = JSON.parse(text); //parse JSON
+                 console.log(lapTimes);
+                 for (lapindex in lapTimes){
+                    for (timeindex in lapTimes[lapindex]){
+                        //console.log(lapTimes[lapindex][timeindex])
+                    }
                  }
-
             }   
 
             function buildData(){
+                console.log("Building data....")
+                var lap = 0
+                for (lapindex in lapChart){
+                    console.log(lapindex)
+                    timingData[lap] = []
+                    for (carindex in lapChart[lapindex]){
+                        var driverData = {}
+                        driver = lapChart[lapindex][carindex]
+                        //console.log(driver)
+                        if (driver!="---"){                        
+                            driverData.lap = lap+1
+                            driverData.time = lapTimes[driver][lap]
+                            driverData.number = driver
+                            driverData.name = driversDictionary[driver].name
+                            timingData[lap].push(driverData)
+                        }
+                    }
+                    //console.log(lap)
+                    lap += 1
+                 }
+                 console.log(timingData)
+                 printTiming(0)
+            }
+
+            function printTiming(lap){
+
+                console.log("Printing Timing....")                
+                document.getElementById("lap").innerHTML += "Vuelta:" + lap + " of " + (Object.keys(timingData).length -1) 
+
+                var timinghtml = ""
+                timinghtml += "<table  border=\"1\" width=\"20%\" height=\"80%\" align=\"center\">"
+                
+                for(ltiming in timingData[lap]){
+                    timinghtml += "<tr>"
+                    timinghtml += "<td>" +  timingData[lap][ltiming].name + " </td>"
+                    timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].time + " </td>"
+                    timinghtml += "</tr>"
+                }
+                
+                timinghtml += "</table>"
+                document.getElementById("laps").innerHTML = timinghtml
 
             }
             window.onload = function(){
@@ -84,10 +127,7 @@
                     console.log('something unexpected happened:'+ err);
                 })
                 
-                //
-                //
-                //
-                //buildData()
+    
             }
         </script>    
     </head>
@@ -99,14 +139,11 @@
                 <li><a href="index.html">Portada</a></li>
             </ul>
         </div>
-        <p class="titulo3">ANTUAN F1 Lab by lap timing</p>
+        <p class="titulo3">ANTUAN F1 Lap by lap timing</p>
 
         <p class="titulo2" id="gp"></p>
-        <div>
-            <table id="laps" border="1">
-
-            </table>
-        </div>
+        <p class="titulo2" id="lap"></p>
+        <div  id="laps"></div>
         
         <div w3-include-html="footer.html"></div>        
     </body>
