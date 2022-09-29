@@ -7,6 +7,7 @@
         <meta name="Formula uno" content="Formula uno simulación">
         <link rel="stylesheet" type="text/css" href="style.css" />
         <script src="js/json.js"></script>
+        <script src="js/utils.js"></script>
         <script>
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
@@ -84,7 +85,7 @@
             function printTiming(lap){
 
                 console.log("Printing Timing....")                
-                document.getElementById("lap").innerHTML += "Vuelta:" + lap + " of " + (Object.keys(timingData).length -1) 
+                document.getElementById("lap").innerHTML += "Lap:" + lap + " of " + (Object.keys(timingData).length -1) 
 
                 var timinghtml = ""
                 timinghtml += "<table  border=\"1\" width=\"20%\" height=\"80%\" align=\"center\">"
@@ -92,8 +93,9 @@
                 for(ltiming in timingData[lap]){
                     timinghtml += "<tr>"
                     timinghtml += "<td>" +  timingData[lap][ltiming].name + " </td>"
-                    timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].time + " </td>"
+                    timinghtml += "<td width=\"10%\">" +  getRaceTime(timingData[lap][ltiming].time) + " </td>"
                     timinghtml += "</tr>"
+
                 }
                 
                 timinghtml += "</table>"
