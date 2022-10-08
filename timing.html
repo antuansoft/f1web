@@ -18,6 +18,7 @@
             var lap;
             var timingData = {}
 
+        
             function readGp(text){
                  var data = JSON.parse(text); //parse JSON
                  console.log(data);
@@ -69,9 +70,11 @@
                         //console.log(driver)
                         if (driver!="---"){                        
                             driverData.lap = lap+1
+                            driverData.position = parseInt(carindex) + 1
                             driverData.time = lapTimes[driver][lap]
                             driverData.number = driver
                             driverData.name = driversDictionary[driver].name
+                            driverData.scuderia = driversDictionary[driver].team
                             timingData[lap].push(driverData)
                         }
                     }
@@ -85,15 +88,17 @@
             function printTiming(lap){
 
                 console.log("Printing Timing....")                
-                document.getElementById("lap").innerHTML += "Lap:" + lap + " of " + (Object.keys(timingData).length -1) 
+                document.getElementById("lap").innerHTML += "<button type=\"button\"> << </button>" + "Lap:" + lap + " of " + (Object.keys(timingData).length -1) + "<button type=\"button\"> >> </button>"
 
                 var timinghtml = ""
-                timinghtml += "<table  border=\"1\" width=\"20%\" height=\"80%\" align=\"center\">"
+                timinghtml += "<table  border=\"1\" width=\"30%\" height=\"80%\" align=\"center\">"
                 
                 for(ltiming in timingData[lap]){
                     timinghtml += "<tr>"
+                    timinghtml += "<td>" +  timingData[lap][ltiming].position  +" </td>"
                     timinghtml += "<td>" +  timingData[lap][ltiming].name + " </td>"
                     timinghtml += "<td width=\"10%\">" +  getRaceTime(timingData[lap][ltiming].time) + " </td>"
+                    timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].scuderia + " </td>"
                     timinghtml += "</tr>"
 
                 }
