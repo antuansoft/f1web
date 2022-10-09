@@ -15,7 +15,7 @@
             var driversDictionary = { };
             var lapChart;
             var lapTimes;
-            var lap;
+            var lap=0;
             var timingData = {}
 
         
@@ -82,13 +82,14 @@
                     lap += 1
                  }
                  console.log(timingData)
-                 printTiming(0)
+                 lap=0
+                 printTiming(lap)
             }
 
-            function printTiming(lap){
-
+            function printTiming(nextlap){
+                lap = nextlap
                 console.log("Printing Timing....")                
-                document.getElementById("lap").innerHTML += "<button type=\"button\"> << </button>" + "Lap:" + lap + " of " + (Object.keys(timingData).length -1) + "<button type=\"button\"> >> </button>"
+                document.getElementById("lap").innerHTML = "<button type=\"button\" onclick=\"printTiming(lap-1)\"> << </button>" + "Lap:" + lap + " of " + (Object.keys(timingData).length -1) + "<button type=\"button\" onclick=\"printTiming(lap+1)\"> >> </button>"
 
                 var timinghtml = ""
                 timinghtml += "<table  border=\"1\" width=\"30%\" height=\"80%\" align=\"center\">"
