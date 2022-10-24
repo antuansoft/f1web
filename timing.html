@@ -61,80 +61,102 @@
             function buildData(){
                 console.log("Building data....")
                 var lap = 0
+                var firtDriver
+                var beforeDriver                
                 for (lapindex in lapChart){
-                    console.log(lapindex)
+                    //console.log(lapindex)
                     timingData[lap] = []
+                    var index = 0
                     for (carindex in lapChart[lapindex]){
                         var driverData = {}
                         driver = lapChart[lapindex][carindex]
+                        if (index == 0)
+                            firtDriver = driver
                         //console.log(driver)
                         if (driver!="---"){                        
                             driverData.lap = lap+1
                             driverData.position = parseInt(carindex) + 1
                             driverData.time = lapTimes[driver][lap]
+                            driverData.raceTime =  getRaceTime(lapTimes[driver][lap]) 
+                            driverData.totaltime = getTotalTime(lapTimes[driver],lap)
                             driverData.number = driver
                             driverData.name = driversDictionary[driver].name
                             driverData.scuderia = driversDictionary[driver].team
+                            if (index > 0)
+                                driverData.interval =  getTotalTime(lapTimes[beforeDriver],lap) - getTotalTime(lapTimes[driver],lap)
+                            else
+                                driverData.interval = "---"
+
+                            if (index > 0)
+                                driverData.gap =  getTotalTime(lapTimes[firtDriver],lap) - getTotalTime(lapTimes[driver],lap)
+                            else
+                                driverData.gap = "---"
                             timingData[lap].push(driverData)
                         }
+                        beforeDriver = driver
+                        index += 1
                     }
                     //console.log(lap)
                     lap += 1
                  }
-                 console.log(timingData)
+                 //console.log(timingData)
                  lap=0
                  printTiming(lap)
             }
 
             function printTiming(nextlap){
-                lap = nextlap
-                console.log("Printing Timing....")                
-                document.getElementById("lap").innerHTML = "<button type=\"button\" onclick=\"printTiming(lap-1)\"> << </button>" + "Lap:" + lap + " of " + (Object.keys(timingData).length -1) + "<button type=\"button\" onclick=\"printTiming(lap+1)\"> >> </button>"
+                if (nextlap > -1){
+                    lap = nextlap
+                    console.log("Printing Timing....")                
+                    document.getElementById("lap").innerHTML = "<button type=\"button\" onclick=\"printTiming(lap-1)\"> << </button>" + "Lap:" + lap + " of " + (Object.keys(timingData).length -1) + "<button type=\"button\" onclick=\"printTiming(lap+1)\"> >> </button>"
 
-                var timinghtml = ""
-                timinghtml += "<table  border=\"1\" width=\"30%\" height=\"80%\" align=\"center\">"
-                
-                for(ltiming in timingData[lap]){
-                    timinghtml += "<tr>"
-                    timinghtml += "<td>" +  timingData[lap][ltiming].position  +" </td>"
-                    timinghtml += "<td>" +  timingData[lap][ltiming].name + " </td>"
-                    timinghtml += "<td width=\"10%\">" +  getRaceTime(timingData[lap][ltiming].time) + " </td>"
-                    timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].scuderia + " </td>"
-                    timinghtml += "</tr>"
+                    var timinghtml = ""
+                    timinghtml += "<table  border=\"1\" width=\"30%\" height=\"80%\" align=\"center\">"
+                    
+                    for(ltiming in timingData[lap]){
+                        timinghtml += "<tr>"
+                        timinghtml += "<td>" +  timingData[lap][ltiming].position  +" </td>"
+                        timinghtml += "<td width=\"30%\">" +  timingData[lap][ltiming].name + " </td>"
+                        timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].raceTime + " </td>"
+                        timinghtml += "<td width=\"50%\">" +  timingData[lap][ltiming].scuderia + " </td>"
+                        timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].interval + " </td>"
+                        timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].gap + " </td>"
+                        timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].totaltime + " </td>"
+                        timinghtml += "</tr>"
+
+                    }
+                    
+                    timinghtml += "</table>"
+                    document.getElementById("laps").innerHTML = timinghtml
 
                 }
-                
-                timinghtml += "</table>"
-                document.getElementById("laps").innerHTML = timinghtml
-
             }
-            window.onload = function(){
-                gp=urlParams.get('gp')
-                loadGps = new Promise((resolve, reject) => {
-                    readTextFile("2022/data/gpinfo_"+gp+".json", readGp)
-                    resolve('loadGps fired!');
-                })
-                loadDrivers = new Promise((resolve, reject) => {
-                    readTextFile("2022/data/drivers_"+gp+".json", readDrivers)
-                    resolve('loadDrivers fired!');
-                })
-                loadLapchart = new Promise((resolve, reject) => {
-                    readTextFile("2022/data/lapchart_"+gp+".json", readLapChart)
-                    resolve('loadLapchart fired!');
-                })
-                loadLaptimes = new Promise((resolve, reject) => {
-                    readTextFile("2022/data/laptime_"+gp+".json", readLapTime)
-                    resolve('loadLaptimes fired!');
-                })
-                asyncFunctions=[loadGps,loadDrivers,loadLapchart,loadLaptimes]
+                window.onload = function(){
+                    gp=urlParams.get('gp')
+                    loadGps = new Promise((resolve, reject) => {
+                        readTextFile("2022/data/gpinfo_"+gp+".json", readGp)
+                        resolve('loadGps fired!');
+                    })
+                    loadDrivers = new Promise((resolve, reject) => {
+                        readTextFile("2022/data/drivers_"+gp+".json", readDrivers)
+                        resolve('loadDrivers fired!');
+                    })
+                    loadLapchart = new Promise((resolve, reject) => {
+                        readTextFile("2022/data/lapchart_"+gp+".json", readLapChart)
+                        resolve('loadLapchart fired!');
+                    })
+                    loadLaptimes = new Promise((resolve, reject) => {
+                        readTextFile("2022/data/laptime_"+gp+".json", readLapTime)
+                        resolve('loadLaptimes fired!');
+                    })
+                    asyncFunctions=[loadGps,loadDrivers,loadLapchart,loadLaptimes]
 
-                Promise.all(asyncFunctions).then((resp) => {
-                    console.log(resp);
-                    buildData();
-                }).catch((err) => {
-                    console.log('something unexpected happened:'+ err);
-                })
-                
+                    Promise.all(asyncFunctions).then((resp) => {
+                        console.log(resp);
+                        buildData();
+                    }).catch((err) => {
+                        console.log('something unexpected happened:'+ err);
+                    })
     
             }
         </script>    
