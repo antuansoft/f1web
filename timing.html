@@ -82,13 +82,24 @@
                             driverData.number = driver
                             driverData.name = driversDictionary[driver].name
                             driverData.scuderia = driversDictionary[driver].team
-                            if (index > 0)
-                                driverData.interval =  getTotalTime(lapTimes[beforeDriver],lap) - getTotalTime(lapTimes[driver],lap)
+                            if (index > 0){
+                                driverData.interval =  (getTotalTime(lapTimes[beforeDriver],lap) - getTotalTime(lapTimes[driver],lap)) / 1000
+                                console.log(driverData.interval)
+                                console.log(typeof(driverData.interval))
+                                console.log(driverData.interval>0)
+                                if (driverData.interval>0){
+                                    driverData.interval =  "+++++++"
+                                }
+                                else
+                                    driverData.interval = Math.abs(driverData.interval)  
+                            }
                             else
                                 driverData.interval = "---"
 
-                            if (index > 0)
-                                driverData.gap =  getTotalTime(lapTimes[firtDriver],lap) - getTotalTime(lapTimes[driver],lap)
+                            if (index > 0){
+                                driverData.gap =  (getTotalTime(lapTimes[firtDriver],lap) - getTotalTime(lapTimes[driver],lap))/1000
+                                driverData.gap = Math.abs(driverData.gap)
+                            }
                             else
                                 driverData.gap = "---"
                             timingData[lap].push(driverData)
@@ -111,7 +122,14 @@
                     document.getElementById("lap").innerHTML = "<button type=\"button\" onclick=\"printTiming(lap-1)\"> << </button>" + "Lap:" + lap + " of " + (Object.keys(timingData).length -1) + "<button type=\"button\" onclick=\"printTiming(lap+1)\"> >> </button>"
 
                     var timinghtml = ""
-                    timinghtml += "<table  border=\"1\" width=\"30%\" height=\"80%\" align=\"center\">"
+                    timinghtml += "<table  border=\"1\" width=\"70%\" height=\"80%\" align=\"center\">"
+                    timinghtml += "<th> position </th>"
+                    timinghtml += "<th> driver </th>"
+                    timinghtml += "<th> lap time </th>"
+                    timinghtml += "<th> team </th>"
+                    timinghtml += "<th> interval </th>"
+                    timinghtml += "<th> gap to leader    </th>"
+                    timinghtml += "<th> total time </th>"
                     
                     for(ltiming in timingData[lap]){
                         timinghtml += "<tr>"
