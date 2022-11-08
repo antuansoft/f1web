@@ -15,6 +15,7 @@
             var driversDictionary = { };
             var lapChart;
             var lapTimes;
+            var startingGrid;
             var lap=0;
             var timingData = {}
 
@@ -58,10 +59,37 @@
                  }
             }   
 
+            function readStartingGrid(text){
+                startingGrid = JSON.parse(text); //parse JSON
+                //console.log(startingGrid);
+                for (gridindex in startingGrid){
+                    //console.log(startingGrid[gridindex])      
+                }                
+            }
+
             function buildData(){
                 console.log("Building data....")
-                var lap = 0
-                var firtDriver
+                var lap = 0 // Starting Grid
+                timingData[lap] = []
+                for (gridindex in startingGrid){
+                    var driverData = {}
+                    driverData.lap = lap
+                    driverData.position = startingGrid[gridindex].position
+                    // driverData.time = lapTimes[driver][lap]
+                    driverData.raceTime =  startingGrid[gridindex].time 
+                    driverData.totaltime = 0
+                    driverData.number = startingGrid[gridindex].number
+                    driverData.name = startingGrid[gridindex].driver
+                    driverData.scuderia = startingGrid[gridindex].scuderia
+                    driverData.interval = startingGrid[gridindex].interval2next.substring(1)
+                    driverData.gap = startingGrid[gridindex].gap2leader.substring(1)
+                    
+                    timingData[lap].push(driverData)                    
+
+                }
+
+                var lap = 1
+                var firstDriver
                 var beforeDriver                
                 for (lapindex in lapChart){
                     //console.log(lapindex)
@@ -71,7 +99,7 @@
                         var driverData = {}
                         driver = lapChart[lapindex][carindex]
                         if (index == 0)
-                            firtDriver = driver
+                            firstDriver = driver
                         //console.log(driver)
                         if (driver!="---"){                        
                             driverData.lap = lap+1
@@ -97,7 +125,7 @@
                                 driverData.interval = "---"
 
                             if (index > 0){
-                                driverData.gap =  (getTotalTime(lapTimes[firtDriver],lap) - getTotalTime(lapTimes[driver],lap))/1000
+                                driverData.gap =  (getTotalTime(lapTimes[firstDriver],lap) - getTotalTime(lapTimes[driver],lap))/1000
                                 driverData.gap = Math.abs(driverData.gap)
                             }
                             else
@@ -116,11 +144,15 @@
             }
 
             function printTiming(nextlap){
-                if (nextlap > -1){
+                if (nextlap > -1 &&  ( nextlap <= (Object.keys(timingData).length -1) ) ){
                     lap = nextlap
-                    console.log("Printing Timing....")                
-                    document.getElementById("lap").innerHTML = "<button type=\"button\" onclick=\"printTiming(lap-1)\"> << </button>" + "Lap:" + lap + " of " + (Object.keys(timingData).length -1) + "<button type=\"button\" onclick=\"printTiming(lap+1)\"> >> </button>"
-
+                    console.log("Printing Timing....")
+                    if (lap == 0){
+                        document.getElementById("lap").innerHTML = "<button type=\"button\" onclick=\"printTiming(lap-1)\"> << </button>" + "Starting Grid" + "<button type=\"button\" onclick=\"printTiming(lap+1)\"> >> </button>"
+                    }else{                    
+                        
+                        document.getElementById("lap").innerHTML = "<button type=\"button\" onclick=\"printTiming(lap-1)\"> << </button>" + "Lap:" + lap + " of " + (Object.keys(timingData).length -1) + "<button type=\"button\" onclick=\"printTiming(lap+1)\"> >> </button>"
+                    }
                     var timinghtml = ""
                     timinghtml += "<table  border=\"1\" width=\"70%\" height=\"80%\" align=\"center\">"
                     timinghtml += "<th> position </th>"
@@ -129,7 +161,9 @@
                     timinghtml += "<th> team </th>"
                     timinghtml += "<th> interval </th>"
                     timinghtml += "<th> gap to leader    </th>"
-                    timinghtml += "<th> total time </th>"
+                    // timinghtml += "<th> total time </th>"
+                    timinghtml += "<th> tyre (laps) </th>"
+                    timinghtml += "<th> pits </th>"
                     
                     for(ltiming in timingData[lap]){
                         timinghtml += "<tr>"
@@ -139,7 +173,9 @@
                         timinghtml += "<td width=\"50%\">" +  timingData[lap][ltiming].scuderia + " </td>"
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].interval + " </td>"
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].gap + " </td>"
-                        timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].totaltime + " </td>"
+                        // timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].totaltime + " </td>"
+                        timinghtml += "<td></td>"
+                        timinghtml += "<td></td>"
                         timinghtml += "</tr>"
 
                     }
@@ -167,7 +203,11 @@
                         readTextFile("2022/data/laptime_"+gp+".json", readLapTime)
                         resolve('loadLaptimes fired!');
                     })
-                    asyncFunctions=[loadGps,loadDrivers,loadLapchart,loadLaptimes]
+                    loadStartingGrid = new Promise((resolve, reject) => {
+                        readTextFile("2022/data/starting_grid_"+gp+".json", readStartingGrid)
+                        resolve('loadStartingGrid fired!');
+                    })
+                    asyncFunctions=[loadGps,loadDrivers,loadLapchart,loadLaptimes,loadStartingGrid]
 
                     Promise.all(asyncFunctions).then((resp) => {
                         console.log(resp);
