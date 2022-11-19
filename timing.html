@@ -67,6 +67,17 @@
                 }                
             }
 
+            function readPitStops(text){
+
+                pitStops = JSON.parse(text); //parse JSON
+                console.log(pitStops);
+                for (pitIndex in pitStops){
+                    //console.log(pitIndex)
+                    //console.log(pitStops[pitIndex])      
+                }
+
+            }
+
             function buildData(){
                 console.log("Building data....")
                 var lap = 0 // Starting Grid
@@ -88,7 +99,7 @@
 
                 }
 
-                var lap = 1
+                var lap = 1 // Laps
                 var firstDriver
                 var beforeDriver                
                 for (lapindex in lapChart){
@@ -130,6 +141,23 @@
                             }
                             else
                                 driverData.gap = "---"
+
+                            //Pit Stops
+                            console.log("PIT PIT")                           
+                            for (pitindex in pitStops[driver]){
+
+                                //if (lap == 15)
+                                console.log(pitStops[driver][pitindex].lap)
+                                console.log(lap)
+                                if (lap  == pitStops[driver][pitindex].lap-1){
+                                    driverData.pit = true
+                                    break;// stop bucle, pit stop found
+                                }
+                                else
+                                    driverData.pit = false
+                            }
+
+                            console.log("FIN PIT PIT")
                             timingData[lap].push(driverData)
                         }
                         beforeDriver = driver
@@ -175,7 +203,17 @@
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].gap + " </td>"
                         // timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].totaltime + " </td>"
                         timinghtml += "<td></td>"
-                        timinghtml += "<td></td>"
+                        //debugger;
+                        console.log(lap)
+                        console.log(ltiming)
+                        console.log(timingData[lap][ltiming])    
+                        debugger;
+                        if (timingData[lap][ltiming].pit){
+                            timinghtml += "<td>PIT</td>"
+                        }else{
+                            timinghtml += "<td></td>"
+                        }
+                        
                         timinghtml += "</tr>"
 
                     }
@@ -207,8 +245,14 @@
                         readTextFile("2022/data/starting_grid_"+gp+".json", readStartingGrid)
                         resolve('loadStartingGrid fired!');
                     })
-                    asyncFunctions=[loadGps,loadDrivers,loadLapchart,loadLaptimes,loadStartingGrid]
 
+                    loadPitStops = new Promise((resolve, reject) => {
+                        readTextFile("2022/data/pit_stops_"+gp+".json", readPitStops)
+                        resolve('loadPitStops fired!');
+                    })
+                    
+
+                    asyncFunctions=[loadGps,loadDrivers,loadLapchart,loadLaptimes,loadStartingGrid,loadPitStops]
                     Promise.all(asyncFunctions).then((resp) => {
                         console.log(resp);
                         buildData();
