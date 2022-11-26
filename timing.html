@@ -104,6 +104,9 @@
                 var beforeDriver                
                 for (lapindex in lapChart){
                     //console.log(lapindex)
+                    if (lapindex == 0){
+                        continue // ignore starting grid
+                    }
                     timingData[lap] = []
                     var index = 0
                     for (carindex in lapChart[lapindex]){
@@ -113,16 +116,16 @@
                             firstDriver = driver
                         //console.log(driver)
                         if (driver!="---"){                        
-                            driverData.lap = lap+1
+                            driverData.lap = lap
                             driverData.position = parseInt(carindex) + 1
-                            driverData.time = lapTimes[driver][lap]
-                            driverData.raceTime =  getRaceTime(lapTimes[driver][lap]) 
-                            driverData.totaltime = getTotalTime(lapTimes[driver],lap)
+                            driverData.time = lapTimes[driver][lap-1]
+                            driverData.raceTime =  getRaceTime(lapTimes[driver][lap-1]) 
+                            driverData.totaltime = getTotalTime(lapTimes[driver],lap-1)
                             driverData.number = driver
                             driverData.name = driversDictionary[driver].name
                             driverData.scuderia = driversDictionary[driver].team
                             if (index > 0){
-                                driverData.interval =  (getTotalTime(lapTimes[beforeDriver],lap) - getTotalTime(lapTimes[driver],lap)) / 1000
+                                driverData.interval =  (getTotalTime(lapTimes[beforeDriver],lap-1) - getTotalTime(lapTimes[driver],lap-1)) / 1000
                                 console.log(driverData.interval)
                                 console.log(typeof(driverData.interval))
                                 console.log(driverData.interval>0)
@@ -136,7 +139,7 @@
                                 driverData.interval = "---"
 
                             if (index > 0){
-                                driverData.gap =  (getTotalTime(lapTimes[firstDriver],lap) - getTotalTime(lapTimes[driver],lap))/1000
+                                driverData.gap =  (getTotalTime(lapTimes[firstDriver],lap-1) - getTotalTime(lapTimes[driver],lap-1))/1000
                                 driverData.gap = Math.abs(driverData.gap)
                             }
                             else
@@ -144,20 +147,33 @@
 
                             //Pit Stops
                             console.log("PIT PIT")                           
+                            driverData.pithistory= ""
                             for (pitindex in pitStops[driver]){
 
-                                //if (lap == 15)
                                 console.log(pitStops[driver][pitindex].lap)
                                 console.log(lap)
-                                if (lap  == pitStops[driver][pitindex].lap-1){
+                                if (lap  == pitStops[driver][pitindex].lap){
                                     driverData.pit = true
                                     break;// stop bucle, pit stop found
                                 }
                                 else
                                     driverData.pit = false
+                                
+                                
                             }
-
                             console.log("FIN PIT PIT")
+                            console.log("PIT HISTORY")
+                            driverData.pithistory= ""
+                            for (pitindex in pitStops[driver]){
+
+                                if (lap >= pitStops[driver][pitindex].lap){
+
+                                    driverData.pithistory+= pitStops[driver][pitindex].stop + " - " + pitStops[driver][pitindex].lap + " - " + pitStops[driver][pitindex].time + "</br>"
+
+                                }
+
+                            }
+                            console.log("FIN PIT HISTORY")
                             timingData[lap].push(driverData)
                         }
                         beforeDriver = driver
@@ -182,7 +198,7 @@
                         document.getElementById("lap").innerHTML = "<button type=\"button\" onclick=\"printTiming(lap-1)\"> << </button>" + "Lap:" + lap + " of " + (Object.keys(timingData).length -1) + "<button type=\"button\" onclick=\"printTiming(lap+1)\"> >> </button>"
                     }
                     var timinghtml = ""
-                    timinghtml += "<table  border=\"1\" width=\"70%\" height=\"80%\" align=\"center\">"
+                    timinghtml += "<table  border=\"1\" width=\"90%\" height=\"80%\" align=\"center\">"
                     timinghtml += "<th> position </th>"
                     timinghtml += "<th> driver </th>"
                     timinghtml += "<th> lap time </th>"
@@ -195,10 +211,10 @@
                     
                     for(ltiming in timingData[lap]){
                         timinghtml += "<tr>"
-                        timinghtml += "<td>" +  timingData[lap][ltiming].position  +" </td>"
-                        timinghtml += "<td width=\"30%\">" +  timingData[lap][ltiming].name + " </td>"
+                        timinghtml += "<td width=\"1%\">" +  timingData[lap][ltiming].position  +" </td>"
+                        timinghtml += "<td width=\"15%\">" +  timingData[lap][ltiming].name + " </td>"
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].raceTime + " </td>"
-                        timinghtml += "<td width=\"50%\">" +  timingData[lap][ltiming].scuderia + " </td>"
+                        timinghtml += "<td width=\"45%\">" +  timingData[lap][ltiming].scuderia + " </td>"
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].interval + " </td>"
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].gap + " </td>"
                         // timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].totaltime + " </td>"
@@ -207,11 +223,10 @@
                         console.log(lap)
                         console.log(ltiming)
                         console.log(timingData[lap][ltiming])    
-                        debugger;
                         if (timingData[lap][ltiming].pit){
                             timinghtml += "<td>PIT</td>"
                         }else{
-                            timinghtml += "<td></td>"
+                            timinghtml += "<td width=\"50%\"> " + timingData[lap][ltiming].pithistory +" </td>"
                         }
                         
                         timinghtml += "</tr>"
