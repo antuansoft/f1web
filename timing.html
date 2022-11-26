@@ -148,6 +148,7 @@
                             //Pit Stops
                             console.log("PIT PIT")                           
                             driverData.pithistory= ""
+                            driverData.pitnumber = 0
                             for (pitindex in pitStops[driver]){
 
                                 console.log(pitStops[driver][pitindex].lap)
@@ -159,7 +160,6 @@
                                 else
                                     driverData.pit = false
                                 
-                                
                             }
                             console.log("FIN PIT PIT")
                             console.log("PIT HISTORY")
@@ -168,7 +168,8 @@
 
                                 if (lap >= pitStops[driver][pitindex].lap){
 
-                                    driverData.pithistory+= pitStops[driver][pitindex].stop + " - " + pitStops[driver][pitindex].lap + " - " + pitStops[driver][pitindex].time + "</br>"
+                                    driverData.pithistory+= pitStops[driver][pitindex].stop + " - Lap:" + pitStops[driver][pitindex].lap + " - Time:" + pitStops[driver][pitindex].time 
+                                    driverData.pitnumber= pitStops[driver][pitindex].stop
 
                                 }
 
@@ -198,7 +199,7 @@
                         document.getElementById("lap").innerHTML = "<button type=\"button\" onclick=\"printTiming(lap-1)\"> << </button>" + "Lap:" + lap + " of " + (Object.keys(timingData).length -1) + "<button type=\"button\" onclick=\"printTiming(lap+1)\"> >> </button>"
                     }
                     var timinghtml = ""
-                    timinghtml += "<table  border=\"1\" width=\"90%\" height=\"80%\" align=\"center\">"
+                    timinghtml += "<table  border=\"1\" width=\"70%\" height=\"80%\" align=\"center\">"
                     timinghtml += "<th> position </th>"
                     timinghtml += "<th> driver </th>"
                     timinghtml += "<th> lap time </th>"
@@ -226,7 +227,8 @@
                         if (timingData[lap][ltiming].pit){
                             timinghtml += "<td>PIT</td>"
                         }else{
-                            timinghtml += "<td width=\"50%\"> " + timingData[lap][ltiming].pithistory +" </td>"
+                            //timinghtml += "<td width=\"50%\"> " + timingData[lap][ltiming].pithistory +" </td>"
+                            timinghtml += "<td title=\" "+ timingData[lap][ltiming].pithistory   + "\" width=\"10%\"> " + timingData[lap][ltiming].pitnumber +" </td>"
                         }
                         
                         timinghtml += "</tr>"
