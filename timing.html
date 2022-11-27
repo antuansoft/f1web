@@ -94,6 +94,7 @@
                     driverData.scuderia = startingGrid[gridindex].scuderia
                     driverData.interval = startingGrid[gridindex].interval2next.substring(1)
                     driverData.gap = startingGrid[gridindex].gap2leader.substring(1)
+                    driverData.pitnumber=0
                     
                     timingData[lap].push(driverData)                    
 
@@ -101,7 +102,8 @@
 
                 var lap = 1 // Laps
                 var firstDriver
-                var beforeDriver                
+                var beforeDriver 
+                var totallaps =  Object.keys(lapChart).length - 1
                 for (lapindex in lapChart){
                     //console.log(lapindex)
                     if (lapindex == 0){
@@ -170,6 +172,11 @@
 
                                     driverData.pithistory+= pitStops[driver][pitindex].stop + " - Lap:" + pitStops[driver][pitindex].lap + " - Time:" + pitStops[driver][pitindex].time 
                                     driverData.pitnumber= pitStops[driver][pitindex].stop
+
+                                }
+                                if (lap == totallaps){
+
+                                    driverData.pitnumber+= "</br>Total time:"  + pitStops[driver][pitindex].timeTotal
 
                                 }
 
