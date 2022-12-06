@@ -18,6 +18,8 @@
             var startingGrid;
             var lap=0;
             var timingData = {}
+            var pitStops ={}
+            var tyres = {}
 
         
             function readGp(text){
@@ -76,6 +78,16 @@
                     //console.log(pitStops[pitIndex])      
                 }
 
+            }
+
+            function readTyres(text){
+
+                tyres = JSON.parse(text); //parse JSON
+                console.log(tyres);
+                for (tyreIndex in tyres){
+                    //console.log(tyreIndex)
+                    //console.log(tyres[tyreIndex])      
+                }
             }
 
             function buildData(){
@@ -182,6 +194,19 @@
 
                             }
                             console.log("FIN PIT HISTORY")
+
+                            //Tyres
+                            console.log("TYRES")
+                            pitlasps = 0
+                            for (tyreindex in tyres[driver]){
+                                pitlasps +=  tyres[driver][tyreindex].laps     
+                                if (lap <= pitlasps){
+                                    driverData.currentTyre = tyres[driver][tyreindex].tyre
+                                    break;                                 
+                                }
+                            }
+                            
+                            console.log("FIN TYRES")
                             timingData[lap].push(driverData)
                         }
                         beforeDriver = driver
@@ -226,11 +251,11 @@
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].interval + " </td>"
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].gap + " </td>"
                         // timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].totaltime + " </td>"
-                        timinghtml += "<td></td>"
+                        timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].currentTyre + " </td>"
                         //debugger;
-                        console.log(lap)
-                        console.log(ltiming)
-                        console.log(timingData[lap][ltiming])    
+                        // console.log(lap)
+                        // console.log(ltiming)
+                        // console.log(timingData[lap][ltiming])    
                         if (timingData[lap][ltiming].pit){
                             timinghtml += "<td>PIT</td>"
                         }else{
@@ -275,8 +300,12 @@
                         resolve('loadPitStops fired!');
                     })
                     
+                    loadTyres = new Promise((resolve, reject) => {
+                        readTextFile("2022/data/tyres_"+gp+".json", readTyres)
+                        resolve('loadTyres fired!');
+                    })
 
-                    asyncFunctions=[loadGps,loadDrivers,loadLapchart,loadLaptimes,loadStartingGrid,loadPitStops]
+                    asyncFunctions=[loadGps,loadDrivers,loadLapchart,loadLaptimes,loadStartingGrid,loadPitStops,loadTyres]
                     Promise.all(asyncFunctions).then((resp) => {
                         console.log(resp);
                         buildData();
