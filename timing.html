@@ -199,7 +199,7 @@
                             console.log("TYRES")
                             pitlasps = 0
                             for (tyreindex in tyres[driver]){
-                                pitlasps +=  tyres[driver][tyreindex].laps     
+                                pitlasps +=  parseInt(tyres[driver][tyreindex].laps)
                                 if (lap <= pitlasps){
                                     driverData.currentTyre = tyres[driver][tyreindex].tyre
                                     break;                                 
