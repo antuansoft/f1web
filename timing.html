@@ -184,6 +184,7 @@
 
                                     driverData.pithistory+= pitStops[driver][pitindex].stop + " - Lap:" + pitStops[driver][pitindex].lap + " - Time:" + pitStops[driver][pitindex].time 
                                     driverData.pitnumber= pitStops[driver][pitindex].stop
+                                     
 
                                 }
                                 if (lap == totallaps){
@@ -194,7 +195,20 @@
 
                             }
                             console.log("FIN PIT HISTORY")
+                            //Stints
+                            console.log("STINTS")
+                            driverData.stintlaps = ""
+                            for (pitindex in pitStops[driver]){
 
+                                if (lap > pitStops[driver][pitindex].lap){
+                                    driverData.stintlaps = lap - pitStops[driver][pitindex].lap                                    
+                                }else if (pitStops[driver][pitindex].stop == 1){
+                                    driverData.stintlaps = lap
+                                }
+                            }
+                            console.log("FIN STINTS")
+
+                            
                             //Tyres
                             console.log("TYRES")
                             pitlasps = 0
@@ -239,8 +253,9 @@
                     timinghtml += "<th> interval </th>"
                     timinghtml += "<th> gap to leader    </th>"
                     // timinghtml += "<th> total time </th>"
-                    timinghtml += "<th> tyre (laps) </th>"
+                    timinghtml += "<th> tyre </th>"
                     timinghtml += "<th> pits </th>"
+                    timinghtml += "<th> stint </th>"
                     
                     for(ltiming in timingData[lap]){
                         timinghtml += "<tr>"
@@ -262,7 +277,7 @@
                             //timinghtml += "<td width=\"50%\"> " + timingData[lap][ltiming].pithistory +" </td>"
                             timinghtml += "<td title=\" "+ timingData[lap][ltiming].pithistory   + "\" width=\"10%\"> " + timingData[lap][ltiming].pitnumber +" </td>"
                         }
-                        
+                        timinghtml += "<td>" +timingData[lap][ltiming].stintlaps+"</td>"
                         timinghtml += "</tr>"
 
                     }
