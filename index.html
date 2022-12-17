@@ -15,7 +15,8 @@
                  gps = JSON.parse(text); //parse JSON
                  console.log(gps);
                  for (let index in gps) {
-                    gp = gps[index]
+                    gp_data = gps[index]
+                    gp = gp_data.gp     
                     readTextFile("2022/data/gpinfo_"+gp+".json", readGp)
                  }
             }
