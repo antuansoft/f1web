@@ -11,6 +11,7 @@
         <script>
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
+            var gpEvents
             var gp
             var driversDictionary = { };
             var lapChart;
@@ -21,7 +22,11 @@
             var pitStops ={}
             var tyres = {}
 
-        
+            function readGpEvents(text){
+                 gpEvents = JSON.parse(text); //parse JSON
+                 console.log(gpEvents);                 
+            }
+
             function readGp(text){
                  var data = JSON.parse(text); //parse JSON
                  console.log(data);
@@ -92,6 +97,11 @@
 
             function buildData(){
                 console.log("Building data....")
+                console.log("TYRES TYPES")
+                 tyreTypes = gpEvents["gp=" & gp]
+                 //console.log(tyreTypes.tyres["C1"])
+                 //console.log(gpEvents)
+                 console.log("FIN TYRES TYPES")
                 var lap = 0 // Starting Grid
                 timingData[lap] = []
                 for (gridindex in startingGrid){
@@ -229,9 +239,19 @@
                     //console.log(lap)
                     lap += 1
                  }
+ 
                  //console.log(timingData)
+                 //Drivers out
+                 console.log("Driver Out")
+                 lap = 0
+                 for (lapindex in lapChart){
+                    var driversOut = difference(lapChart[0], lapChart[lap])
+                    console.log(driversOut)
+                    lap += 1
+                 }
+                 console.log("Fin Driver Out")
                  lap=0
-                 printTiming(lap)
+                 //printTiming(lap)
             }
 
             function printTiming(nextlap){
@@ -266,7 +286,7 @@
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].interval + " </td>"
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].gap + " </td>"
                         // timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].totaltime + " </td>"
-                        timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].currentTyre + " </td>"
+                        timinghtml += "<td width=\"10%\">" +  tyreTypes.tyres[timingData[lap][ltiming].currentTyre] + " </td>"
                         //debugger;
                         // console.log(lap)
                         // console.log(ltiming)
@@ -289,6 +309,10 @@
             }
                 window.onload = function(){
                     gp=urlParams.get('gp')
+                    loadGpEvents= new Promise((resolve, reject) => {
+                        readTextFile("2022/data/gps.json", readGpEvents)
+                        resolve('readGpEvents fired!');
+                    })
                     loadGps = new Promise((resolve, reject) => {
                         readTextFile("2022/data/gpinfo_"+gp+".json", readGp)
                         resolve('loadGps fired!');

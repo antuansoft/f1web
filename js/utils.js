@@ -35,3 +35,29 @@ function getTotalTime(driverRaceTime, lap){
     return total
 
 }
+
+/**
+ * The elements from currentList that are not in otherList
+ * 
+ * @param {list of ....} currentList 
+ * @param {list of ....} otherList 
+ */
+function difference(currentList, otherList){
+
+    arr1 = removeItem(currentList,"---")
+    arr2 = removeItem(otherList,"---")
+    let difference = arr1.filter(x => !arr2.includes(x));
+    return difference
+}
+
+/**
+ * Remove item from list,
+ * @param {List to remove} currentList 
+ * @param {value to remove from list} element 
+ * @returns 
+ */
+function removeItem(currentList, element){
+
+    return currentList.filter(item => item !== element)
+
+}
