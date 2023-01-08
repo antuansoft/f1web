@@ -19,6 +19,7 @@
             var startingGrid;
             var lap=0;
             var timingData = {}
+            var outData = {}
             var pitStops ={}
             var tyres = {}
 
@@ -245,11 +246,22 @@
                  console.log("Driver Out")
                  lap = 0
                  for (lapindex in lapChart){
-                    var driversOut = difference(lapChart[0], lapChart[lap])
-                    console.log(driversOut)
+                    outData[lap] = []
+                    if (lapindex>0){
+                        var lastdriversOut = difference(lapChart[lapindex-1], lapChart[lapindex])
+                        var beforeDriversOut= outData[lap-1]
+                        var driversOut = Array.from(beforeDriversOut)
+                        if (lastdriversOut.length>0){
+                            driversOut.push(lastdriversOut)
+                        }
+                        outData[lap] = driversOut
+                    }
+                    //console.log(driversOut)
                     lap += 1
                  }
+                 console.log(outData)
                  console.log("Fin Driver Out")
+                 
                  lap=0
                  //printTiming(lap)
             }

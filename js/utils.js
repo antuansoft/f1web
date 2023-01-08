@@ -47,6 +47,8 @@ function difference(currentList, otherList){
     arr1 = removeItem(currentList,"---")
     arr2 = removeItem(otherList,"---")
     let difference = arr1.filter(x => !arr2.includes(x));
+    if (difference.length==0)
+        return []
     return difference
 }
 
