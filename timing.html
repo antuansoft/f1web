@@ -252,18 +252,24 @@
                         var beforeDriversOut= outData[lap-1]
                         var driversOut = Array.from(beforeDriversOut)
                         if (lastdriversOut.length>0){
-                            driversOut.push(lastdriversOut)
+                            var driverOut = {}
+                            for (ldoindex in lastdriversOut){
+                                driverOut.number = lastdriversOut[ldoindex]
+                                driverOut.driverdata = driversDictionary[driverOut.number]
+                                driverOut.lap = lap
+                            }
+                            driversOut.push(driverOut)
                         }
                         outData[lap] = driversOut
                     }
                     //console.log(driversOut)
                     lap += 1
                  }
-                 console.log(outData)
+                 //console.log(outData)
                  console.log("Fin Driver Out")
                  
                  lap=0
-                 //printTiming(lap)
+                 printTiming(lap)
             }
 
             function printTiming(nextlap){
@@ -316,6 +322,29 @@
                     
                     timinghtml += "</table>"
                     document.getElementById("laps").innerHTML = timinghtml
+
+                    var outhtml = ""
+                    outhtml += "<table  border=\"1\" width=\"70%\" height=\"80%\" align=\"center\">"
+                    outhtml += "<th> driver </th>"
+                    outhtml += "<th> team </th>"
+                    outhtml += "<th> laps </th>"
+                    console.log(outData)
+                    for(outIndex in outData[lap]){
+                        debugger;
+                        outhtml += "<tr>"
+                        outhtml += "<td>"
+                        outhtml += outData[lap][outIndex].driverdata.name
+                        outhtml += "</td>"
+                        outhtml += "<td>"
+                        outhtml += outData[lap][outIndex].driverdata.team
+                        outhtml += "</td>"
+                        outhtml += "<td>"
+                        outhtml += outData[lap][outIndex].lap
+                        outhtml += "</td>"
+                        outhtml += "</tr>"
+                    }
+                    outhtml += "</table>"
+                    document.getElementById("outs").innerHTML = outhtml
 
                 }
             }
@@ -380,6 +409,8 @@
         <p class="titulo2" id="gp"></p>
         <p class="titulo2" id="lap"></p>
         <div  id="laps"></div>
+        <p class="titulo2" id="out">Out of race</p>
+        <div  id="outs"></div>
         
         <div w3-include-html="footer.html"></div>        
     </body>
