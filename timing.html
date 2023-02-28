@@ -25,12 +25,12 @@
 
             function readGpEvents(text){
                  gpEvents = JSON.parse(text); //parse JSON
-                 console.log(gpEvents);                 
+                 //console.log(gpEvents);                 
             }
 
             function readGp(text){
                  var data = JSON.parse(text); //parse JSON
-                 console.log(data);
+                 //console.log(data);
                  document.getElementById("gp").innerHTML += data.gp
             }
             function readDrivers(text){
@@ -49,7 +49,7 @@
 
             function readLapChart(text){
                  lapChart = JSON.parse(text); //parse JSON
-                 console.log(lapChart);
+                 //console.log(lapChart);
                  for (lapindex in lapChart){
                     for (carindex in lapChart[lapindex]){
                         //console.log(lapCharts[lapindex][carindex])
@@ -59,7 +59,7 @@
 
             function readLapTime(text){
                  lapTimes = JSON.parse(text); //parse JSON
-                 console.log(lapTimes);
+                 //console.log(lapTimes);
                  for (lapindex in lapTimes){
                     for (timeindex in lapTimes[lapindex]){
                         //console.log(lapTimes[lapindex][timeindex])
@@ -78,7 +78,7 @@
             function readPitStops(text){
 
                 pitStops = JSON.parse(text); //parse JSON
-                console.log(pitStops);
+                //console.log(pitStops);
                 for (pitIndex in pitStops){
                     //console.log(pitIndex)
                     //console.log(pitStops[pitIndex])      
@@ -89,7 +89,7 @@
             function readTyres(text){
 
                 tyres = JSON.parse(text); //parse JSON
-                console.log(tyres);
+                //console.log(tyres);
                 for (tyreIndex in tyres){
                     //console.log(tyreIndex)
                     //console.log(tyres[tyreIndex])      
@@ -97,12 +97,12 @@
             }
 
             function buildData(){
-                console.log("Building data....")
-                console.log("TYRES TYPES")
+                //console.log("Building data....")
+                //console.log("TYRES TYPES")
                  tyreTypes = gpEvents["gp=" & gp]
                  //console.log(tyreTypes.tyres["C1"])
                  //console.log(gpEvents)
-                 console.log("FIN TYRES TYPES")
+                 //console.log("FIN TYRES TYPES")
                 var lap = 0 // Starting Grid
                 timingData[lap] = []
                 for (gridindex in startingGrid){
@@ -146,14 +146,16 @@
                             driverData.time = lapTimes[driver][lap-1]
                             driverData.raceTime =  getRaceTime(lapTimes[driver][lap-1]) 
                             driverData.totaltime = getTotalTime(lapTimes[driver],lap-1)
+                            //driverData.isFL = isFasteLap()
+                            driverData.isPB = isPersonalBest(lapTimes,driver,lap-1)
                             driverData.number = driver
                             driverData.name = driversDictionary[driver].name
                             driverData.scuderia = driversDictionary[driver].team
                             if (index > 0){
                                 driverData.interval =  (getTotalTime(lapTimes[beforeDriver],lap-1) - getTotalTime(lapTimes[driver],lap-1)) / 1000
-                                console.log(driverData.interval)
-                                console.log(typeof(driverData.interval))
-                                console.log(driverData.interval>0)
+                                //console.log(driverData.interval)
+                                //console.log(typeof(driverData.interval))
+                                //console.log(driverData.interval>0)
                                 if (driverData.interval>0){
                                     driverData.interval =  "+++++++"
                                 }
@@ -171,13 +173,13 @@
                                 driverData.gap = "---"
 
                             //Pit Stops
-                            console.log("PIT PIT")                           
+                            // console.log("PIT PIT")                           
                             driverData.pithistory= ""
                             driverData.pitnumber = 0
                             for (pitindex in pitStops[driver]){
 
-                                console.log(pitStops[driver][pitindex].lap)
-                                console.log(lap)
+                                //console.log(pitStops[driver][pitindex].lap)
+                                //console.log(lap)
                                 if (lap  == pitStops[driver][pitindex].lap){
                                     driverData.pit = true
                                     break;// stop bucle, pit stop found
@@ -186,8 +188,8 @@
                                     driverData.pit = false
                                 
                             }
-                            console.log("FIN PIT PIT")
-                            console.log("PIT HISTORY")
+                            //console.log("FIN PIT PIT")
+                            //console.log("PIT HISTORY")
                             driverData.pithistory= ""
                             for (pitindex in pitStops[driver]){
 
@@ -205,9 +207,9 @@
                                 }
 
                             }
-                            console.log("FIN PIT HISTORY")
+                            //console.log("FIN PIT HISTORY")
                             //Stints
-                            console.log("STINTS")
+                            //console.log("STINTS")
                             driverData.stintlaps = ""
                             for (pitindex in pitStops[driver]){
 
@@ -217,11 +219,11 @@
                                     driverData.stintlaps = lap
                                 }
                             }
-                            console.log("FIN STINTS")
+                            //console.log("FIN STINTS")
 
                             
                             //Tyres
-                            console.log("TYRES")
+                            //console.log("TYRES")
                             pitlasps = 0
                             for (tyreindex in tyres[driver]){
                                 pitlasps +=  parseInt(tyres[driver][tyreindex].laps)
@@ -231,7 +233,7 @@
                                 }
                             }
                             
-                            console.log("FIN TYRES")
+                            //console.log("FIN TYRES")
                             timingData[lap].push(driverData)
                         }
                         beforeDriver = driver
@@ -241,9 +243,9 @@
                     lap += 1
                  }
  
-                 //console.log(timingData)
+                 console.log(timingData)
                  //Drivers out
-                 console.log("Driver Out")
+                 //console.log("Driver Out")
                  lap = 0
                  for (lapindex in lapChart){
                     outData[lap] = []
@@ -252,13 +254,17 @@
                         var beforeDriversOut= outData[lap-1]
                         var driversOut = Array.from(beforeDriversOut)
                         if (lastdriversOut.length>0){
-                            var driverOut = {}
-                            for (ldoindex in lastdriversOut){
-                                driverOut.number = lastdriversOut[ldoindex]
-                                driverOut.driverdata = driversDictionary[driverOut.number]
-                                driverOut.lap = lap
-                            }
-                            driversOut.push(driverOut)
+                            
+                            if (lapindex < (Object.keys(timingData).length -1)) //It is not the last lap.
+                            {
+                                for (ldoindex in lastdriversOut){
+                                    var driverOut = {}
+                                    driverOut.number = lastdriversOut[ldoindex]
+                                    driverOut.driverdata = driversDictionary[driverOut.number]
+                                    driverOut.lap = lap
+                                    driversOut.push(driverOut)
+                                }    
+                            }   
                         }
                         outData[lap] = driversOut
                     }
@@ -266,7 +272,7 @@
                     lap += 1
                  }
                  //console.log(outData)
-                 console.log("Fin Driver Out")
+                 //console.log("Fin Driver Out")
                  
                  lap=0
                  printTiming(lap)
@@ -296,10 +302,12 @@
                     timinghtml += "<th> stint </th>"
                     
                     for(ltiming in timingData[lap]){
+                        debugger;
+                        var colorClass = setColorClass(timingData[lap][ltiming].isPB)
                         timinghtml += "<tr>"
-                        timinghtml += "<td width=\"1%\">" +  timingData[lap][ltiming].position  +" </td>"
+                        timinghtml += "<td width=\"1%\" class=\"number\">" +  timingData[lap][ltiming].position  +" </td>"
                         timinghtml += "<td width=\"15%\">" +  timingData[lap][ltiming].name + " </td>"
-                        timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].raceTime + " </td>"
+                        timinghtml += "<td width=\"10%\" class=\"" + colorClass + "\">" +  timingData[lap][ltiming].raceTime + " </td>"
                         timinghtml += "<td width=\"45%\">" +  timingData[lap][ltiming].scuderia + " </td>"
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].interval + " </td>"
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].gap + " </td>"
@@ -328,9 +336,8 @@
                     outhtml += "<th> driver </th>"
                     outhtml += "<th> team </th>"
                     outhtml += "<th> laps </th>"
-                    console.log(outData)
+                    //console.log(outData)
                     for(outIndex in outData[lap]){
-                        debugger;
                         outhtml += "<tr>"
                         outhtml += "<td>"
                         outhtml += outData[lap][outIndex].driverdata.name

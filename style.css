@@ -6,7 +6,11 @@
     font-family: F1-regular;
     src: url(fonts/Formula1-Regular.woff2);
 }
-
+@font-face {
+    font-family: F1-bold;
+    src: url(fonts/Formula1-Bold.woff2);
+}
+body {background-color: black;}
 a:link  {
     text-decoration: none;
     color: #B8860B;
@@ -27,6 +31,35 @@ a:active  {
     color: #A0522D;
 }
 
+tr:nth-child(even){
+    background-color: rgb(50, 50, 50);
+    color: white;
+}
+tr:nth-child(odd){
+    background-color: black;
+    color: white;
+}
+
+th{
+    background-color: black;
+    color: rgb(115, 115, 115);
+}
+td.number{
+    font-family: F1-bold;
+    color: rgb(0, 255, 255)
+}
+td.personalbest{
+    font-family: F1-bold;
+    color: rgb(0, 255, 34)
+}
+td.fastestlap{
+    font-family: F1-bold;
+    color: rgb(255, 0, 106)
+}
+td.normal{
+    font-family: F1-bold;
+    color: rgb(255, 255, 255)
+}
 .migas {
     font-size: 38px;
     padding-left: 20px;
@@ -58,12 +91,12 @@ a:active  {
     margin-top: 50px;
 }
 .titulo2{
-
     font-size: 32px;
     line-height: 36px;
     font-family: "F1-regular";
     margin-bottom: 10px;
     text-align: center;
+    color: white;
 }
 .titulo3{
     color: #e10600;
@@ -85,8 +118,9 @@ a:active  {
 
 }
 
-.nombre_seccion{
 
+.nombre_seccion{
+    color: white;
     font-size: 40px;
     font-family: F1-regular;
     letter-spacing: .2px;
@@ -119,6 +153,7 @@ a:active  {
     
 }
 
+.background_color
 .nombre_juego{
 
     font-size: 40px;
