@@ -44,8 +44,22 @@ function getTotalTime(driverRaceTime, lap){
 
 }
 
-function isFastestLap(lapTimes, driver, lap){
-
+function isFastestLap(lapTimes, driversDictionary, driver, lap){
+    currentLapTime = lapTimes[driver][lap]
+    for (i = 0; i <= lap; i++ ){
+        values = Object.values(driversDictionary)
+        for (j = 0; j< values.length; j++ ){
+            var numDriver = values[j].number
+            try {
+                var lapTime = lapTimes[numDriver][i]    
+            } catch (error) {
+                lapTime = Number.MAX_VALUE
+            }
+            if (Number(currentLapTime) > Number(lapTime))
+                return false;
+        }
+    }
+    return true;
 
 }
 

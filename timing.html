@@ -146,8 +146,9 @@
                             driverData.time = lapTimes[driver][lap-1]
                             driverData.raceTime =  getRaceTime(lapTimes[driver][lap-1]) 
                             driverData.totaltime = getTotalTime(lapTimes[driver],lap-1)
-                            //driverData.isFL = isFasteLap()
+                            driverData.isFL = isFastestLap(lapTimes,driversDictionary,driver,lap-1)
                             driverData.isPB = isPersonalBest(lapTimes,driver,lap-1)
+                            debugger;
                             driverData.number = driver
                             driverData.name = driversDictionary[driver].name
                             driverData.scuderia = driversDictionary[driver].team
@@ -302,7 +303,6 @@
                     timinghtml += "<th> stint </th>"
                     
                     for(ltiming in timingData[lap]){
-                        debugger;
                         var colorClass = setColorClass(timingData[lap][ltiming].isPB)
                         timinghtml += "<tr>"
                         timinghtml += "<td width=\"1%\" class=\"number\">" +  timingData[lap][ltiming].position  +" </td>"
