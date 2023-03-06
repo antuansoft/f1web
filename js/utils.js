@@ -74,8 +74,11 @@ function isPersonalBest(lapTimes, driver, lap){
     return true;
 }
 
-function setColorClass(isPersonalBestLap){
-    if (isPersonalBestLap)
+function setTimeColorClass(isPersonalBestLap, isBestLap){
+    
+    if (isBestLap)
+        return "fastestlap"
+    else if (isPersonalBestLap)
         return "personalbest"
     else    
         return "normal"

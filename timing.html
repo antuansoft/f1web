@@ -303,7 +303,7 @@
                     timinghtml += "<th> stint </th>"
                     
                     for(ltiming in timingData[lap]){
-                        var colorClass = setColorClass(timingData[lap][ltiming].isPB)
+                        var colorClass = setTimeColorClass(timingData[lap][ltiming].isPB, timingData[lap][ltiming].isFL)
                         timinghtml += "<tr>"
                         timinghtml += "<td width=\"1%\" class=\"number\">" +  timingData[lap][ltiming].position  +" </td>"
                         timinghtml += "<td width=\"15%\">" +  timingData[lap][ltiming].name + " </td>"
