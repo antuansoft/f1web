@@ -148,7 +148,6 @@
                             driverData.totaltime = getTotalTime(lapTimes[driver],lap-1)
                             driverData.isFL = isFastestLap(lapTimes,driversDictionary,driver,lap-1)
                             driverData.isPB = isPersonalBest(lapTimes,driver,lap-1)
-                            debugger;
                             driverData.number = driver
                             driverData.name = driversDictionary[driver].name
                             driverData.scuderia = driversDictionary[driver].team
@@ -303,16 +302,17 @@
                     timinghtml += "<th> stint </th>"
                     
                     for(ltiming in timingData[lap]){
-                        var colorClass = setTimeColorClass(timingData[lap][ltiming].isPB, timingData[lap][ltiming].isFL)
+                        var timeClass = setTimeColorClass(timingData[lap][ltiming].isPB, timingData[lap][ltiming].isFL)
+                        var tyreClass = setTyreColorClass(timingData[lap][ltiming].currentTyre,tyreTypes)
                         timinghtml += "<tr>"
                         timinghtml += "<td width=\"1%\" class=\"number\">" +  timingData[lap][ltiming].position  +" </td>"
                         timinghtml += "<td width=\"15%\">" +  timingData[lap][ltiming].name + " </td>"
-                        timinghtml += "<td width=\"10%\" class=\"" + colorClass + "\">" +  timingData[lap][ltiming].raceTime + " </td>"
+                        timinghtml += "<td width=\"10%\" class=\"" + timeClass + "\">" +  timingData[lap][ltiming].raceTime + " </td>"
                         timinghtml += "<td width=\"45%\">" +  timingData[lap][ltiming].scuderia + " </td>"
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].interval + " </td>"
                         timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].gap + " </td>"
                         // timinghtml += "<td width=\"10%\">" +  timingData[lap][ltiming].totaltime + " </td>"
-                        timinghtml += "<td width=\"10%\">" +  tyreTypes.tyres[timingData[lap][ltiming].currentTyre] + " </td>"
+                        timinghtml += "<td width=\"10%\" class=\"" + tyreClass + "\">" +  tyreTypes.tyres[timingData[lap][ltiming].currentTyre] + " </td>"
                         //debugger;
                         // console.log(lap)
                         // console.log(ltiming)

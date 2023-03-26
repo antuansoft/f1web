@@ -84,6 +84,24 @@ function setTimeColorClass(isPersonalBestLap, isBestLap){
         return "normal"
 }
 
+function setTyreColorClass(currentTyre,tyreTypes){
+    debugger;
+    if (currentTyre != undefined){
+
+        if ((tyreTypes.tyres[currentTyre]).toLowerCase() == 'soft'){
+            return "softtyre"
+        }
+        else if ((tyreTypes.tyres[currentTyre]).toLowerCase() == 'medium'){
+            return "mediumtyre"
+        }
+        else if ((tyreTypes.tyres[currentTyre]).toLowerCase() == 'hard'){
+            return "hardtyre"
+        }
+    }
+    else
+        return ""
+}
+
 /**
  * The elements from currentList that are not in otherList
  * 

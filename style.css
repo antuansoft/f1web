@@ -60,6 +60,18 @@ td.normal{
     font-family: F1-bold;
     color: rgb(255, 255, 255)
 }
+td.hardtyre{
+    font-family: F1-bold;
+    color: rgb(255, 255, 255)
+}
+td.mediumtyre{
+    font-family: F1-bold;
+    color: hwb(64 0% 0%)
+}
+td.softtyre{
+    font-family: F1-bold;
+    color: rgb(255, 0, 0)
+}
 .migas {
     font-size: 38px;
     padding-left: 20px;
