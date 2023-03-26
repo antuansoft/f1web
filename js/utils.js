@@ -85,7 +85,6 @@ function setTimeColorClass(isPersonalBestLap, isBestLap){
 }
 
 function setTyreColorClass(currentTyre,tyreTypes){
-    debugger;
     if (currentTyre != undefined){
 
         if ((tyreTypes.tyres[currentTyre]).toLowerCase() == 'soft'){
